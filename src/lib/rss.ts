@@ -9,7 +9,8 @@ export async function feed(lang: Lang, context: APIContext) {
   return rss({
     title: s.siteTitle,
     description: s.siteDescription,
-    site: context.site!,
+    // include the base path, otherwise the channel <link> points at the bare domain
+    site: new URL(import.meta.env.BASE_URL, context.site!).href,
     items: posts.map((p) => ({
       title: p.data.title,
       description: p.data.description,

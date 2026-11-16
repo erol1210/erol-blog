@@ -39,7 +39,12 @@ const alternates = Object.fromEntries(LANGS.map((l) => [l, langPath(l, 'work')])
             <p class="what">{p.text[lang]}</p>
             <p class="meta">
               <span class:list={['tag label', p.kind]}>{p.kind === 'real' ? s.provReal : s.provMock}</span>
-              {p.demo && <a class="label" href={p.demo}>{s.liveDemo} ↗</a>}
+              {p.demo && (
+                <span class="demo">
+                  <a class="label" href={p.demo}>{s.liveDemo} ↗</a>
+                  <small>{s.demoWake}</small>
+                </span>
+              )}
             </p>
           </div>
         </li>
@@ -158,6 +163,14 @@ const alternates = Object.fromEntries(LANGS.map((l) => [l, langPath(l, 'work')])
     align-items: center;
     gap: 8px 18px;
     margin: 18px 0 0;
+  }
+  .demo {
+    display: grid;
+    line-height: 1.2;
+  }
+  .demo small {
+    font-size: var(--step--1);
+    color: var(--graphite);
   }
   .meta a {
     display: inline-flex;

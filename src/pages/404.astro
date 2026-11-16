@@ -1,18 +1,30 @@
 ---
 import Base from '../layouts/Base.astro';
 import Fingerprint from '../components/Fingerprint.astro';
-import { langPath, t } from '../i18n';
-const s = t('en');
+import { LANGS, langPath, t } from '../i18n';
+// GitHub Pages serves this one file for every missing path, whatever the language,
+// so it speaks all three.
 ---
 <Base lang="en" title="404">
   <section class="wrap nf">
     <div class="plot" aria-hidden="true"><Fingerprint seed="404" variant="post" /></div>
-    <h1>{s.notFound}</h1>
-    <p><a href={langPath('en')}>{s.notFoundLink} →</a></p>
+    <h1>{t('en').notFound}</h1>
+    <ul class="langs" role="list">
+      {LANGS.map((l) => (
+        <li lang={l}>
+          <span>{t(l).notFound}</span>
+          <a href={langPath(l)}>{t(l).notFoundLink} →</a>
+        </li>
+      ))}
+    </ul>
   </section>
 </Base>
 <style>
   .nf { padding-block: 64px; max-width: 720px; }
   .plot { max-width: 420px; margin-bottom: 32px; }
-  h1 { font-family: var(--f-display); font-weight: 800; font-size: var(--step-3); line-height: 1; letter-spacing: -0.035em; margin: 0 0 16px; }
+  h1 { font-family: var(--f-display); font-weight: 800; font-size: var(--step-3); line-height: 1; letter-spacing: -0.035em; margin: 0 0 24px; }
+  .langs { list-style: none; margin: 0; padding: 0; }
+  .langs li { display: flex; flex-wrap: wrap; gap: 4px 16px; align-items: center; padding: 10px 0; border-top: 1px solid var(--rule); }
+  .langs li:first-child span { display: none; }
+  .langs a { display: inline-flex; align-items: center; min-height: 44px; color: var(--cobalt); }
 </style>

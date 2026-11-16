@@ -30,7 +30,7 @@ const [school, degree] = cv.education;
 const tel = SITE.phone.replace(/\s+/g, '');
 ---
 
-<Base lang={lang} title={s.cvTitle} description={cv.summary} nav="cv" alternates={alternates}>
+<Base lang={lang} title={s.cvTitle} description={s.cvDesc} nav="cv" alternates={alternates}>
   <header class="intro wrap">
     <div class="mark" aria-hidden="true"><Fingerprint seed="cv" variant="thumb" /></div>
     <h1>{s.cvTitle}</h1>
