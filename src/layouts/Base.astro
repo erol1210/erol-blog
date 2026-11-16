@@ -8,7 +8,7 @@ interface Props {
   description?: string;
   /** Where each language edition of this page lives. Missing ones fall back to that language's home. */
   alternates?: Partial<Record<Lang, string>>;
-  nav?: 'writing' | 'work' | 'about';
+  nav?: 'writing' | 'work' | 'cv' | 'about';
   type?: 'website' | 'article';
 }
 
@@ -57,6 +57,7 @@ const rssHref = langPath(lang, 'rss.xml').replace(/\/$/, '');
       <nav class="primary" aria-label="Primary">
         <a href={langPath(lang)} aria-current={nav === 'writing' ? 'page' : undefined}>{s.navWriting}</a>
         <a href={langPath(lang, 'work')} aria-current={nav === 'work' ? 'page' : undefined}>{s.navWork}</a>
+        <a href={langPath(lang, 'cv')} aria-current={nav === 'cv' ? 'page' : undefined}>{s.navCv}</a>
         <a href={langPath(lang, 'about')} aria-current={nav === 'about' ? 'page' : undefined}>{s.navAbout}</a>
       </nav>
       <div class="tools">

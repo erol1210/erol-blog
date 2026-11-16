@@ -13,16 +13,19 @@ const alternates = Object.fromEntries(LANGS.map((l) => [l, langPath(l, 'about')]
 
 const bio: Record<Lang, string[]> = {
   en: [
-    'I’m Erol. I write software, mostly Python and JavaScript, and I like tools that one person can understand end to end.',
-    'Most of what I build starts as a problem someone near me has: a budget that lives in five spreadsheets, a game server that needs moderating, a mailing list in an Excel file. This blog is where I write down what those projects taught me.',
+    'I’m Erol Yılmaz. I studied Management Information Systems at Ankara Yıldırım Beyazıt University and work where software meets business processes.',
+    'At IPCEU in Ankara I started as an IT and business development intern and stayed on as a junior system developer, taking a finance tracker and a task tracker from their first version to company-wide, daily use. Before that I spent a summer at the University of Stuttgart researching non-intrusive load monitoring in data centres, and handled partnerships and market research at BISTEK Software.',
+    'Outside work I build tools for problems near me — a game server panel, a bulk mailer, a meal planner — and this blog is where I write down what each of them taught me.',
   ],
   de: [
-    'Ich bin Erol. Ich schreibe Software, meistens in Python und JavaScript, und mag Werkzeuge, die eine einzelne Person komplett verstehen kann.',
-    'Das meiste, was ich baue, beginnt als Problem von jemandem in meiner Nähe: ein Budget in fünf Tabellen, ein Gameserver, der moderiert werden muss, eine Verteilerliste in einer Excel-Datei. Hier schreibe ich auf, was mich diese Projekte gelehrt haben.',
+    'Ich bin Erol Yılmaz. Ich habe Wirtschaftsinformatik an der Ankara Yıldırım Beyazıt Universität studiert und arbeite dort, wo Software auf Geschäftsprozesse trifft.',
+    'Bei IPCEU in Ankara habe ich mit einem Praktikum in IT und Business Development angefangen und bin danach als Junior System Developer geblieben: Eine Finanz- und eine Aufgaben-App habe ich von der ersten Version bis zur täglichen Nutzung im ganzen Unternehmen gebracht. Davor habe ich einen Sommer an der Universität Stuttgart zu Non-Intrusive Load Monitoring in Rechenzentren geforscht und bei BISTEK Software Partnerschaften und Marktanalysen betreut.',
+    'Daneben baue ich Werkzeuge für Probleme in meiner Nähe – ein Gameserver-Panel, ein Serienmail-Tool, einen Essensplaner – und schreibe hier auf, was mich jedes davon gelehrt hat.',
   ],
   tr: [
-    'Ben Erol. Çoğunlukla Python ve JavaScript ile yazılım yazıyorum; tek bir kişinin baştan sona anlayabileceği araçları seviyorum.',
-    'Yaptıklarımın çoğu yakınımdaki birinin derdiyle başlıyor: beş ayrı tabloya dağılmış bir bütçe, moderasyon isteyen bir oyun sunucusu, Excel dosyasında duran bir mail listesi. Bu blog, o projelerin bana öğrettiklerini yazdığım yer.',
+    'Ben Erol Yılmaz. Ankara Yıldırım Beyazıt Üniversitesi’nde Yönetim Bilişim Sistemleri okudum; yazılımla iş süreçlerinin kesiştiği yerde çalışıyorum.',
+    'Ankara’da IPCEU’da BT ve iş geliştirme stajyeri olarak başladım, staj sonrası junior system developer olarak kaldım; bir finans takip ve bir görev takip uygulamasını ilk sürümünden şirket genelinde her gün kullanılır hâle getirdim. Öncesinde bir yaz Stuttgart Üniversitesi’nde veri merkezlerinde Non-Intrusive Load Monitoring üzerine araştırma yaptım, BISTEK Software’de uluslararası ortaklıklar ve pazar araştırmaları üzerinde çalıştım.',
+    'İş dışında yakınımdaki dertlere araçlar yapıyorum — bir oyun sunucusu paneli, bir toplu mail aracı, bir yemek planlayıcı — ve bu blog, her birinin bana öğrettiklerini yazdığım yer.',
   ],
 };
 
@@ -38,6 +41,7 @@ const bio: Record<Lang, string[]> = {
       <div class="prose">
         {bio[lang].map((p) => <p>{p}</p>)}
       </div>
+      <p class="label cvlink"><a href={langPath(lang, 'cv')}>{s.cvSeeCv} →</a></p>
     </div>
   </section>
 
@@ -61,6 +65,15 @@ const bio: Record<Lang, string[]> = {
 </Base>
 
 <style>
+  .cvlink {
+    margin: 22px 0 0;
+  }
+  .cvlink a {
+    display: inline-flex;
+    align-items: center;
+    min-height: 44px;
+    color: var(--cobalt);
+  }
   .about {
     display: grid;
     grid-template-columns: minmax(0, 4fr) minmax(0, 7fr);

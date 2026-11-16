@@ -1,0 +1,110 @@
+{
+  "en": {
+    "h": { "summary": "SUMMARY", "experience": "EXPERIENCE", "volunteering": "VOLUNTEERING & MEMBERSHIPS", "education": "EDUCATION", "languages": "LANGUAGES", "skills": "TECHNICAL SKILLS" },
+    "summary": "Management Information Systems graduate focused on software and business development. Hands-on experience building internal web systems with Flask and Supabase, completed a university-level research internship in Germany and worked across international project environments. Aims to combine technical skills with business processes and stakeholder communication.",
+    "experience": [
+      { "title": "Junior System Developer (Office Assistant)", "org": "IPCEU", "dates": "Jun 2025 – Jan 2026", "place": "Ankara, Türkiye", "bullets": [
+        "Completed the internal system project initiated during the internship and successfully deployed it company-wide.",
+        "Finance Tracker App: Built with Flask & Supabase, the tool migrated expense tracking from manual processes to a digital platform, significantly reducing weekly reporting time.",
+        "Task Tracker App: Centralised in-team task management, actively used by multiple employees on a daily basis."
+      ] },
+      { "title": "IT & Business Development Intern", "org": "IPCEU", "dates": "Jan 2025 – Jun 2025", "place": "Ankara, Türkiye", "bullets": [
+        "Participated in every stage of the project management lifecycle, gaining hands-on product development experience.",
+        "Developed the first version of the Finance Tracker App, was hired full-time after the internship to bring the project to completion."
+      ] },
+      { "title": "Personal Executive Assistant", "org": "BISTEK Software", "dates": "Dec 2024 – Sep 2025", "place": "Ankara, Türkiye", "bullets": [
+        "Managed international relations and strategic partnerships.",
+        "Conducted market research to identify business expansion opportunities, handled external written communications."
+      ] },
+      { "title": "Assistant Researcher", "org": "University of Stuttgart", "dates": "Jun 2024 – Sep 2024", "place": "Stuttgart, Germany", "bullets": [
+        "Conducted academic research on the Non-Intrusive Load Monitoring (NILM) problem in data centres.",
+        "Analysed and interpreted large datasets, contributed to data collection pipelines using Prometheus-based monitoring infrastructure."
+      ] },
+      { "title": "Chief Marketing Officer", "org": "BISTEK Software", "dates": "Mar 2022 – Oct 2022", "place": "Ankara, Türkiye", "bullets": [
+        "Contributed to the development of data-driven marketing strategies using Python and Excel.",
+        "Provided coordination support across project planning and marketing processes."
+      ] }
+    ],
+    "volunteering": [
+      { "title": "Board Member / Project Coordinator", "org": "GOYoung Association", "dates": "2023 – 2025", "bullets": [
+        "In March 2025, officially represented the NGO as a participant in the EU-funded Skill4Success project held in Mallorca, Spain, and completed entrepreneurship training.",
+        "Researched potential project partnerships for each new call period and prepared independent project proposals."
+      ] }
+    ],
+    "education": ["Ankara Yıldırım Beyazıt University", "Management Information Systems – BSc  |  GPA: 3.41 / 4.00  |  2020–2025"],
+    "languages": [["Turkish", "Native"], ["English", "C1 (IELTS Academic 7.0)"], ["German", "A1 (Basic)"]],
+    "skills": [["Programming & Frameworks", "Python (Flask, Django), HTML/CSS/JavaScript"], ["Databases", "PostgreSQL, Supabase"], ["Monitoring & DevOps", "Prometheus, Git"], ["Office & Productivity", "MS Office (Excel, Word, PowerPoint)"]]
+  },
+  "de": {
+    "h": { "summary": "PROFIL", "experience": "BERUFSERFAHRUNG", "volunteering": "EHRENAMT & MITGLIEDSCHAFTEN", "education": "AUSBILDUNG", "languages": "SPRACHEN", "skills": "IT-KENNTNISSE" },
+    "summary": "B.Sc. in Wirtschaftsinformatik mit Schwerpunkt auf Software- und Geschäftsentwicklung. Praktische Erfahrung in der Entwicklung interner Websysteme mit Flask und Supabase, ein Forschungspraktikum an einer Universität in Deutschland sowie Arbeit in internationalen Projektumfeldern. Ziel ist es, technische Kompetenz mit Geschäftsprozessen und der Kommunikation mit Stakeholdern zu verbinden.",
+    "experience": [
+      { "title": "Junior System Developer (Office Assistant)", "org": "IPCEU", "dates": "Juni 2025 – Jan. 2026", "place": "Ankara, Türkei", "bullets": [
+        "Das im Praktikum begonnene interne Systemprojekt abgeschlossen und unternehmensweit eingeführt.",
+        "Finance Tracker App: Mit Flask & Supabase entwickelt; überführte die Ausgabenerfassung von manuellen Abläufen auf eine digitale Plattform und verkürzte den wöchentlichen Berichtsaufwand deutlich.",
+        "Task Tracker App: Zentralisierte die teaminterne Aufgabenverwaltung; wird täglich von mehreren Mitarbeitenden aktiv genutzt."
+      ] },
+      { "title": "Praktikum IT & Business Development", "org": "IPCEU", "dates": "Jan. 2025 – Juni 2025", "place": "Ankara, Türkei", "bullets": [
+        "An allen Phasen des Projektmanagement-Zyklus beteiligt und dabei praktische Erfahrung in der Produktentwicklung gesammelt.",
+        "Erste Version der Finance Tracker App entwickelt; nach dem Praktikum in Vollzeit übernommen, um das Projekt abzuschließen."
+      ] },
+      { "title": "Assistenz der Geschäftsführung", "org": "BISTEK Software", "dates": "Dez. 2024 – Sep. 2025", "place": "Ankara, Türkei", "bullets": [
+        "Internationale Beziehungen und strategische Partnerschaften betreut.",
+        "Marktanalysen zu Expansionsmöglichkeiten durchgeführt und die externe schriftliche Kommunikation verantwortet."
+      ] },
+      { "title": "Forschungspraktikum (Assistant Researcher)", "org": "Universität Stuttgart", "dates": "Juni 2024 – Sep. 2024", "place": "Stuttgart, Deutschland", "bullets": [
+        "Akademische Forschung zum Problem des Non-Intrusive Load Monitoring (NILM) in Rechenzentren.",
+        "Große Datensätze analysiert und interpretiert; an Pipelines zur Datenerfassung mit einer Prometheus-basierten Monitoring-Infrastruktur mitgewirkt."
+      ] },
+      { "title": "Chief Marketing Officer", "org": "BISTEK Software", "dates": "März 2022 – Okt. 2022", "place": "Ankara, Türkei", "bullets": [
+        "An der Entwicklung datengetriebener Marketingstrategien mit Python und Excel mitgewirkt.",
+        "Koordination in Projektplanungs- und Marketingprozessen unterstützt."
+      ] }
+    ],
+    "volunteering": [
+      { "title": "Vorstandsmitglied / Projektkoordination", "org": "GOYoung Association", "dates": "2023 – 2025", "bullets": [
+        "Im März 2025 den Verein offiziell beim EU-geförderten Projekt Skill4Success in Mallorca, Spanien, vertreten und ein Entrepreneurship-Training absolviert.",
+        "Für jede neue Ausschreibungsrunde mögliche Projektpartnerschaften recherchiert und eigenständig Projektanträge erstellt."
+      ] }
+    ],
+    "education": ["Ankara Yıldırım Beyazıt Universität", "Wirtschaftsinformatik – B.Sc.  |  GPA: 3,41 / 4,00  |  2020–2025"],
+    "languages": [["Türkisch", "Muttersprache"], ["Englisch", "C1 (IELTS Academic 7.0)"], ["Deutsch", "A1 (Grundkenntnisse)"]],
+    "skills": [["Programmierung & Frameworks", "Python (Flask, Django), HTML/CSS/JavaScript"], ["Datenbanken", "PostgreSQL, Supabase"], ["Monitoring & DevOps", "Prometheus, Git"], ["Office & Produktivität", "MS Office (Excel, Word, PowerPoint)"]]
+  },
+  "tr": {
+    "h": { "summary": "ÖZET", "experience": "DENEYİM", "volunteering": "GÖNÜLLÜ ÇALIŞMALAR & ÜYELİKLER", "education": "EĞİTİM", "languages": "DİLLER", "skills": "TEKNİK BECERİLER" },
+    "summary": "Yönetim Bilişim Sistemleri alanında lisans derecesine sahip, yazılım geliştirme ve iş geliştirme odaklı bir profesyonel. Flask ve Supabase ile iç sistem geliştirme konusunda uygulamalı deneyime sahip, Almanya’da üniversite düzeyinde araştırma stajı tamamlamış ve uluslararası proje ortamlarında çalışmıştır. Teknik yetkinliğini iş süreçleri ve paydaş iletişimiyle birleştirerek katkı sunmayı hedeflemektedir.",
+    "experience": [
+      { "title": "Junior System Developer (Ofis Asistanı)", "org": "IPCEU", "dates": "Haz 2025 – Oca 2026", "place": "Ankara", "bullets": [
+        "Staj sürecinde başlatılan iç sistem projesini tamamlayarak şirket genelinde aktif kullanıma aldı.",
+        "Finans Takip Uygulaması: Flask & Supabase ile geliştirilen araç, harcama takibini dijital ortama taşıdı ve raporlama süresini belirgin biçimde kısalttı.",
+        "Görev Takip Uygulaması: Ekip içi görev yönetimini merkezileştirdi, birden fazla çalışan tarafından aktif olarak kullanılmaktadır."
+      ] },
+      { "title": "BT & İş Geliştirme Stajyeri", "org": "IPCEU", "dates": "Oca 2025 – Haz 2025", "place": "Ankara", "bullets": [
+        "Proje yönetimi döngüsünün her aşamasına katılarak ürün geliştirme süreçlerini bizzat deneyimledi.",
+        "Finans Takip Uygulamasının ilk sürümünü geliştirdi, staj sonrası kadroya alınarak projeyi teslim aşamasına taşıdı."
+      ] },
+      { "title": "Başkan Asistanı", "org": "BISTEK Software", "dates": "Ara 2024 – Eyl 2025", "place": "Ankara", "bullets": [
+        "Uluslararası ilişkileri ve stratejik ortaklıkları yönetti.",
+        "İş geliştirme fırsatlarına yönelik pazar araştırmaları gerçekleştirdi, dış yazışmaları yürüttü."
+      ] },
+      { "title": "Stajyer Araştırmacı", "org": "Stuttgart Üniversitesi", "dates": "Haz 2024 – Eyl 2024", "place": "Stuttgart, Almanya", "bullets": [
+        "Veri merkezlerinde Non-Intrusive Load Monitoring (NILM) problemi üzerine akademik araştırma yaptı.",
+        "Büyük veri setlerini analiz edip yorumladı, Prometheus tabanlı izleme altyapısıyla veri toplama süreçlerine katkı sağladı."
+      ] },
+      { "title": "Pazarlama Şefi", "org": "BISTEK Software", "dates": "Mar 2022 – Eki 2022", "place": "Ankara", "bullets": [
+        "Python ve Excel kullanarak veri odaklı pazarlama stratejileri oluşturulmasına katkıda bulundu.",
+        "Proje planlama ve pazarlama süreçlerinde koordinasyon desteği verdi."
+      ] }
+    ],
+    "volunteering": [
+      { "title": "Yönetim Üyesi / Proje Koordinatörü", "org": "GOYoung Derneği", "dates": "2023 – 2025", "bullets": [
+        "Mart 2025’te AB destekli Skill4Success projesi kapsamında STK’yı resmi katılımcı olarak temsil etti, Mallorca’da girişimcilik eğitimi aldı.",
+        "Her çağrı dönemi için potansiyel proje ortaklıkları araştırdı ve bağımsız proje teklifleri hazırladı."
+      ] }
+    ],
+    "education": ["Ankara Yıldırım Beyazıt Üniversitesi", "Yönetim Bilişim Sistemleri – Lisans  |  GPA: 3.41 / 4.00  |  2020–2025"],
+    "languages": [["Türkçe", "Ana dil"], ["İngilizce", "C1 (IELTS Academic 7.0)"], ["Almanca", "A1 (Başlangıç)"]],
+    "skills": [["Programlama & Framework", "Python (Flask, Django), HTML/CSS/JavaScript"], ["Veritabanı", "PostgreSQL, Supabase"], ["İzleme & DevOps", "Prometheus, Git"], ["Ofis & Üretkenlik", "MS Office (Excel, Word, PowerPoint)"]]
+  }
+}

@@ -1,0 +1,327 @@
+---
+import { statSync } from 'node:fs';
+import Base from '../layouts/Base.astro';
+import Fingerprint from '../components/Fingerprint.astro';
+import cvData from '../data/cv.json';
+import { LANGS, SITE, langPath, t, withBase, type Lang } from '../i18n';
+
+interface Props {
+  lang: Lang;
+}
+const { lang } = Astro.props;
+const s = t(lang);
+const cv = cvData[lang];
+const alternates = Object.fromEntries(LANGS.map((l) => [l, langPath(l, 'cv')]));
+
+const ENDONYM: Record<Lang, string> = { en: 'English', de: 'Deutsch', tr: 'Türkçe' };
+const pdfs = LANGS.map((l) => {
+  const file = `cv/erol-yilmaz-cv-${l}.pdf`;
+  const kb = Math.round(statSync(`public/${file}`).size / 1024);
+  return { lang: l, href: withBase(file), name: ENDONYM[l], kb, file: `Erol-Yilmaz-CV-${l.toUpperCase()}.pdf` };
+});
+const mine = pdfs.find((p) => p.lang === lang)!;
+const others = pdfs.filter((p) => p.lang !== lang);
+
+const sections = [
+  { id: 'experience', title: cv.h.experience, items: cv.experience },
+  { id: 'volunteering', title: cv.h.volunteering, items: cv.volunteering },
+];
+const [school, degree] = cv.education;
+const tel = SITE.phone.replace(/\s+/g, '');
+---
+
+<Base lang={lang} title={s.cvTitle} description={cv.summary} nav="cv" alternates={alternates}>
+  <header class="intro wrap">
+    <div class="mark" aria-hidden="true"><Fingerprint seed="cv" variant="thumb" /></div>
+    <h1>{s.cvTitle}</h1>
+    <p class="lede">{s.cvLede}</p>
+    <div class="dl">
+      <a class="btn" href={mine.href} download={mine.file} type="application/pdf">
+        <svg viewBox="0 0 24 24" width="18" height="18" aria-hidden="true"><path d="M12 4v11m0 0l-4.5-4.5M12 15l4.5-4.5M5 19h14" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        <span>{s.cvDownload}</span>
+        <span class="meta" lang={mine.lang}>{mine.name} · A4 · {mine.kb} KB</span>
+      </a>
+      <p class="also label">
+        {s.cvAlso}:{' '}
+        {others.map((p, i) => (
+          <>
+            {i > 0 && ' · '}
+            <a href={p.href} download={p.file} type="application/pdf" hreflang={p.lang} lang={p.lang}>{p.name}</a>
+          </>
+        ))}
+      </p>
+    </div>
+  </header>
+
+  <div class="cv wrap">
+    <div class="main">
+      <section aria-labelledby="cv-summary">
+        <h2 id="cv-summary" class="label">{cv.h.summary}</h2>
+        <p class="summary">{cv.summary}</p>
+      </section>
+
+      {sections.map((sec) => (
+        <section aria-labelledby={`cv-${sec.id}`}>
+          <h2 id={`cv-${sec.id}`} class="label">{sec.title}</h2>
+          <ol class="timeline" role="list">
+            {sec.items.map((j) => (
+              <li class="entry">
+                <p class="when label">{j.dates}</p>
+                <div class="what">
+                  <h3>{j.title}</h3>
+                  <p class="where">{j.org}{'place' in j && j.place ? ` · ${j.place}` : ''}</p>
+                  <ul>
+                    {j.bullets.map((b) => <li>{b}</li>)}
+                  </ul>
+                </div>
+              </li>
+            ))}
+          </ol>
+        </section>
+      ))}
+
+      <section aria-labelledby="cv-education">
+        <h2 id="cv-education" class="label">{cv.h.education}</h2>
+        <div class="entry">
+          <p class="when label">{degree.split('|').at(-1)?.trim()}</p>
+          <div class="what">
+            <h3>{school}</h3>
+            <p class="where">{degree.split('|').slice(0, -1).map((x) => x.trim()).join(' · ')}</p>
+          </div>
+        </div>
+      </section>
+    </div>
+
+    <aside class="side">
+      <section aria-labelledby="cv-contact">
+        <h2 id="cv-contact" class="label">{s.cvContact}</h2>
+        <ul class="contact" role="list">
+          <li><a href={`mailto:${SITE.email}`}>{SITE.email}</a></li>
+          <li><a href={`tel:${tel}`}>{SITE.phone}</a></li>
+          <li><a href={SITE.linkedin} rel="me">linkedin.com/in/erolyilmaz1 ↗</a></li>
+          <li><a href={SITE.github} rel="me">github.com/erol1210 ↗</a></li>
+        </ul>
+      </section>
+
+      <section aria-labelledby="cv-languages">
+        <h2 id="cv-languages" class="label">{cv.h.languages}</h2>
+        <dl class="pairs">
+          {cv.languages.map(([k, v]) => (
+            <div><dt>{k}</dt><dd>{v}</dd></div>
+          ))}
+        </dl>
+      </section>
+
+      <section aria-labelledby="cv-skills">
+        <h2 id="cv-skills" class="label">{cv.h.skills}</h2>
+        <dl class="pairs stacked">
+          {cv.skills.map(([k, v]) => (
+            <div><dt>{k}</dt><dd>{v}</dd></div>
+          ))}
+        </dl>
+      </section>
+    </aside>
+  </div>
+</Base>
+
+<style>
+  .intro {
+    padding-block: clamp(40px, 6vw, 80px) 0;
+  }
+  .mark {
+    width: 72px;
+    margin-bottom: 18px;
+  }
+  h1 {
+    margin: 0;
+    font-family: var(--f-display);
+    font-weight: 800;
+    font-size: var(--step-3);
+    line-height: 1;
+    letter-spacing: -0.035em;
+  }
+  .lede {
+    max-width: 52ch;
+    margin: 20px 0 0;
+    font-size: 1.3rem;
+    line-height: 1.45;
+    font-style: italic;
+    color: var(--graphite);
+  }
+  .dl {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 14px 28px;
+    margin-top: 30px;
+  }
+  .btn {
+    display: inline-flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 4px 12px;
+    min-height: 48px;
+    padding: 10px 20px 10px 16px;
+    border-radius: 999px;
+    background: var(--ink);
+    color: var(--paper);
+    font-family: var(--f-display);
+    font-weight: 700;
+    font-size: 1.05rem;
+    text-decoration: none;
+    transition: background-color 0.15s ease-out;
+  }
+  .btn:hover {
+    background: var(--pen);
+  }
+  .btn:focus-visible {
+    outline: 2px solid var(--cobalt);
+    outline-offset: 3px;
+  }
+  .btn .meta {
+    font-family: var(--f-mono);
+    font-weight: 400;
+    font-size: var(--step--1);
+    letter-spacing: 0.02em;
+    opacity: 0.75;
+  }
+  .also {
+    margin: 0;
+  }
+  .also a {
+    display: inline-flex;
+    align-items: center;
+    min-height: 44px;
+    color: var(--cobalt);
+  }
+
+  .cv {
+    display: grid;
+    grid-template-columns: minmax(0, 8fr) minmax(0, 4fr);
+    gap: clamp(32px, 6vw, 88px);
+    align-items: start;
+    margin-top: clamp(40px, 6vw, 72px);
+  }
+  section + section {
+    margin-top: 44px;
+  }
+  h2 {
+    margin: 0 0 18px;
+    padding-bottom: 10px;
+    border-bottom: 1px solid var(--rule);
+    color: var(--pen);
+  }
+  .summary {
+    max-width: var(--measure);
+    margin: 0;
+    font-size: 1.15rem;
+    line-height: 1.6;
+  }
+  .timeline {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+  }
+  .entry {
+    display: grid;
+    grid-template-columns: 11.5em minmax(0, 1fr);
+    gap: 4px 24px;
+  }
+  .timeline .entry + .entry {
+    margin-top: 26px;
+  }
+  .when {
+    margin: 4px 0 0;
+    font-variant-numeric: tabular-nums;
+  }
+  h3 {
+    margin: 0;
+    font-family: var(--f-display);
+    font-weight: 700;
+    font-size: 1.2rem;
+    line-height: 1.25;
+    letter-spacing: -0.01em;
+  }
+  .where {
+    margin: 4px 0 0;
+    color: var(--graphite);
+    font-style: italic;
+  }
+  .what ul {
+    margin: 10px 0 0;
+    padding-left: 1.1em;
+    line-height: 1.55;
+  }
+  .what li + li {
+    margin-top: 5px;
+  }
+  .what li::marker {
+    color: var(--pen);
+  }
+
+  .side {
+    position: sticky;
+    top: 24px;
+  }
+  .contact {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+  }
+  .contact a {
+    display: inline-flex;
+    align-items: center;
+    min-height: 40px;
+    color: var(--cobalt);
+    font-family: var(--f-mono);
+    font-size: 0.85rem;
+    word-break: break-all;
+  }
+  .pairs {
+    margin: 0;
+  }
+  .pairs div {
+    display: flex;
+    justify-content: space-between;
+    gap: 12px;
+    padding: 8px 0;
+    border-bottom: 1px dashed var(--rule);
+  }
+  .pairs dt {
+    font-weight: 600;
+  }
+  .pairs dd {
+    margin: 0;
+    color: var(--graphite);
+    text-align: right;
+  }
+  .pairs.stacked div {
+    display: block;
+  }
+  .pairs.stacked dd {
+    text-align: left;
+    margin-top: 2px;
+  }
+
+  @media (max-width: 900px) {
+    .cv {
+      grid-template-columns: 1fr;
+    }
+    .side {
+      position: static;
+    }
+  }
+  @media (max-width: 600px) {
+    .entry {
+      grid-template-columns: 1fr;
+    }
+    .when {
+      margin: 0;
+    }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .btn {
+      transition: none;
+    }
+  }
+</style>

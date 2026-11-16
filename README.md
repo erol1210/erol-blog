@@ -59,6 +59,12 @@ Each project shows its screenshots in a swipeable gallery; clicking one opens a 
 
 Project data and captions live in `src/data/projects.ts`.
 
+## CV (`/cv`)
+
+The CV page reads `src/data/cv.json` (EN/DE/TR). The downloadable PDFs live in `public/cv/`:
+`erol-yilmaz-cv-en.pdf` and `-tr.pdf` are the originals; `-de.pdf` is a German translation laid out
+to match them (A4, Calibri). When the CV changes, update `cv.json` and replace the PDFs together.
+
 ## Design tokens
 
 | Token | Light | Dark |
