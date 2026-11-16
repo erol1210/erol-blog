@@ -100,6 +100,7 @@ export const projects: Project[] = [
     name: 'ERØL Tasks',
     stack: 'Flask · SQLAlchemy',
     kind: 'real',
+    demo: 'https://erol-demo.onrender.com',
     shots: [
       s(todo1, 'browser', 'localhost/',
         'ERØL Tasks list: tasks with project, assignee, due date and approval state.',
