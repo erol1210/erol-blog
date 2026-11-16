@@ -43,11 +43,19 @@ Renaming a post's file changes its drawing; editing its title does not.
 
 No image on this site shows real people, real servers or real customer data.
 
-- **Real app · demo data**: ERØL Finance, ERØL Tasks and mePlanner were run locally against a
-  throwaway SQLite database filled by each project's own seed script (fictional names, `.example` e-mails).
-- **Mock · invented data**: Heimdall, the SquadJS plugins, FF, Treffy, Toplu Mail and QR Yoklama are
-  redrawn in each app's own look. IPs come from the documentation range `203.0.113.0/24`,
-  addresses from `example.com`.
+- **Real app · invented data** — the app's own screens, never real people or customer data:
+  - ERØL Finance, ERØL Tasks, mePlanner: run locally against a throwaway SQLite database filled by
+    each project's seed script (fictional names, `.example` e-mails).
+  - FF: the real React build, with its API answered by an invented, internally consistent fixture set.
+  - Treffy: the real Flutter UI built for web from a screenshot-only entry point whose repositories
+    return in-memory sample data; it never talks to Supabase.
+  - QR Yoklama: the real Flask templates rendered with invented courses and students.
+  - Toplu Mail: the real Textual app on an isolated copy with sample campaigns; nothing is sent.
+  - Heimdall: the live panel, read-only, with every server name, player name, chat message and
+    community figure replaced by invented values in the page before the screenshot.
+- **Mock · invented data**: the SquadJS plugins, redrawn as a terminal log.
+
+Each project shows its screenshots in a swipeable gallery; clicking one opens a full-screen viewer.
 
 Project data and captions live in `src/data/projects.ts`.
 

@@ -1,7 +1,8 @@
 ---
 import Base from '../layouts/Base.astro';
 import Fingerprint from '../components/Fingerprint.astro';
-import Shot from '../components/Shot.astro';
+import Gallery from '../components/Gallery.astro';
+import Lightbox from '../components/Lightbox.astro';
 import { projects } from '../data/projects';
 import { LANGS, langPath, t, type Lang } from '../i18n';
 
@@ -18,22 +19,18 @@ const alternates = Object.fromEntries(LANGS.map((l) => [l, langPath(l, 'work')])
     <h1>{s.workTitle}</h1>
     <p class="lede">{s.workIntro}</p>
     <dl class="legend label">
-      <div><dt><span class="tag demo">{s.provDemo}</span></dt><dd>{s.provDemoNote}</dd></div>
+      <div><dt><span class="tag real">{s.provReal}</span></dt><dd>{s.provRealNote}</dd></div>
       <div><dt><span class="tag mock">{s.provMock}</span></dt><dd>{s.provMockNote}</dd></div>
     </dl>
   </header>
 
   <ol class="projects wrap" role="list">
     {projects.map((p, i) => {
-      const [main, ...extra] = p.shots;
-      const phoneOnly = main.frame === 'phone';
+      const phoneOnly = p.shots.every((x) => x.frame === 'phone');
       return (
         <li class:list={['project', { flip: i % 2 === 1, 'phone-only': phoneOnly }]} id={p.id}>
           <div class="media">
-            <div class="main-shot"><Shot shot={main} lang={lang} eager={i === 0} /></div>
-            {extra.map((x) => (
-              <div class="extra-shot"><Shot shot={x} lang={lang} /></div>
-            ))}
+            <Gallery shots={p.shots} name={p.name} lang={lang} eager={i === 0} />
           </div>
           <div class="copy">
             <div class="mark" aria-hidden="true"><Fingerprint seed={p.id} variant="thumb" /></div>
@@ -41,7 +38,7 @@ const alternates = Object.fromEntries(LANGS.map((l) => [l, langPath(l, 'work')])
             <p class="stack label">{p.stack}</p>
             <p class="what">{p.text[lang]}</p>
             <p class="meta">
-              <span class:list={['tag label', p.kind]}>{p.kind === 'demo' ? s.provDemo : s.provMock}</span>
+              <span class:list={['tag label', p.kind]}>{p.kind === 'real' ? s.provReal : s.provMock}</span>
               {p.demo && <a class="label" href={p.demo}>{s.liveDemo} ↗</a>}
             </p>
           </div>
@@ -49,6 +46,7 @@ const alternates = Object.fromEntries(LANGS.map((l) => [l, langPath(l, 'work')])
       );
     })}
   </ol>
+  <Lightbox lang={lang} />
 </Base>
 
 <style>
@@ -100,7 +98,7 @@ const alternates = Object.fromEntries(LANGS.map((l) => [l, langPath(l, 'work')])
     text-transform: uppercase;
     letter-spacing: 0.06em;
   }
-  .tag.demo {
+  .tag.real {
     color: var(--cobalt);
   }
   .tag.mock {
@@ -132,19 +130,8 @@ const alternates = Object.fromEntries(LANGS.map((l) => [l, langPath(l, 'work')])
   .project.phone-only.flip {
     grid-template-columns: minmax(0, 7fr) minmax(0, 5fr);
   }
-  .project.phone-only .main-shot {
-    max-width: 300px;
-    margin-inline: auto;
-  }
   .media {
-    position: relative;
-  }
-  .extra-shot {
-    position: absolute;
-    right: -2%;
-    bottom: -14%;
-    width: 24%;
-    min-width: 120px;
+    min-width: 0;
   }
   .mark {
     width: 72px;
@@ -189,13 +176,6 @@ const alternates = Object.fromEntries(LANGS.map((l) => [l, langPath(l, 'work')])
     }
     .project.flip .media {
       order: 0;
-    }
-    .extra-shot {
-      bottom: -10%;
-      width: 30%;
-    }
-    .media:has(.extra-shot) {
-      margin-bottom: 40px;
     }
   }
 </style>

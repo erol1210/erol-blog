@@ -1,0 +1,254 @@
+---
+/**
+ * Full-screen viewer shared by every <Gallery> on the page. A gallery fires
+ * `lightbox:open` with its items; arrows, keys and swipes page through them.
+ */
+import { t, type Lang } from '../i18n';
+
+interface Props {
+  lang: Lang;
+}
+const s = t(Astro.props.lang);
+---
+
+<dialog class="lb" data-lightbox data-of={s.galOf} aria-label={s.galLabel}>
+  <div class="frame">
+    <figure>
+      <img data-img alt="" decoding="async" />
+      <figcaption>
+        <span class="count label"><b data-current>1</b> {s.galOf} <span data-total>1</span></span>
+        <span data-caption></span>
+      </figcaption>
+    </figure>
+  </div>
+  <button type="button" class="btn close" data-close aria-label={s.galClose}>
+    <svg viewBox="0 0 24 24" width="20" height="20" aria-hidden="true"><path d="M6 6l12 12M18 6L6 18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>
+  </button>
+  <button type="button" class="btn side prev" data-prev aria-label={s.galPrev}>
+    <svg viewBox="0 0 24 24" width="22" height="22" aria-hidden="true"><path d="M15 5l-7 7 7 7" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+  </button>
+  <button type="button" class="btn side next" data-next aria-label={s.galNext}>
+    <svg viewBox="0 0 24 24" width="22" height="22" aria-hidden="true"><path d="M9 5l7 7-7 7" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+  </button>
+</dialog>
+
+<style>
+  .lb {
+    width: 100vw;
+    height: 100dvh;
+    max-width: none;
+    max-height: none;
+    margin: 0;
+    padding: 0;
+    border: 0;
+    background: transparent;
+    color: #ece8f5;
+    overflow: hidden;
+  }
+  .lb::backdrop {
+    background: rgb(13 10 22 / 0.92);
+    backdrop-filter: blur(3px);
+  }
+  .lb[open] {
+    animation: lb-in 0.2s ease-out;
+  }
+  @keyframes lb-in {
+    from {
+      opacity: 0;
+    }
+  }
+  .frame {
+    position: absolute;
+    inset: 0;
+    display: grid;
+    place-items: center;
+    padding: 56px 76px 24px;
+    touch-action: pan-y pinch-zoom;
+  }
+  figure {
+    display: grid;
+    justify-items: center;
+    gap: 14px;
+    margin: 0;
+    max-width: 100%;
+    max-height: 100%;
+  }
+  img {
+    display: block;
+    max-width: min(100%, 1600px);
+    max-height: calc(100dvh - 150px);
+    width: auto;
+    height: auto;
+    border-radius: 8px;
+    box-shadow: 0 30px 80px -30px rgb(0 0 0 / 0.8);
+    user-select: none;
+    -webkit-user-drag: none;
+  }
+  img.phone {
+    border-radius: 22px;
+  }
+  figcaption {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 6px 16px;
+    max-width: 70ch;
+    font-size: 0.95rem;
+    line-height: 1.45;
+    text-align: center;
+    color: #c9c3da;
+  }
+  .count {
+    color: #a49eba;
+    font-variant-numeric: tabular-nums;
+  }
+  .count b {
+    color: #ff5aae;
+    font-weight: 600;
+  }
+  .btn {
+    position: absolute;
+    display: grid;
+    place-items: center;
+    width: 48px;
+    height: 48px;
+    border: 1px solid rgb(236 232 245 / 0.22);
+    border-radius: 50%;
+    background: rgb(28 24 48 / 0.7);
+    color: #ece8f5;
+    cursor: pointer;
+    transition: border-color 0.15s, color 0.15s;
+  }
+  .btn:hover:not(:disabled) {
+    border-color: #ff5aae;
+    color: #ff5aae;
+  }
+  .btn:focus-visible {
+    outline: 2px solid #9aa6ff;
+    outline-offset: 2px;
+  }
+  .btn:disabled {
+    opacity: 0.3;
+    cursor: default;
+  }
+  .close {
+    top: 14px;
+    right: 14px;
+  }
+  .side {
+    top: 50%;
+    transform: translateY(-50%);
+  }
+  .prev {
+    left: 14px;
+  }
+  .next {
+    right: 14px;
+  }
+  .lb.single .side,
+  .lb.single .count {
+    display: none;
+  }
+
+  @media (max-width: 700px) {
+    .frame {
+      padding: 64px 12px 96px;
+    }
+    img {
+      max-height: calc(100dvh - 230px);
+    }
+    .side {
+      top: auto;
+      bottom: 22px;
+      transform: none;
+    }
+    .prev {
+      left: calc(50% - 60px);
+    }
+    .next {
+      right: calc(50% - 60px);
+    }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .lb[open] {
+      animation: none;
+    }
+  }
+</style>
+
+<script>
+  type Item = { src: string; w: number; h: number; alt: string; phone: boolean };
+  type Detail = { items: Item[]; index: number; opener: HTMLElement; onIndex?: (i: number) => void };
+
+  const dlg = document.querySelector<HTMLDialogElement>('[data-lightbox]');
+  if (dlg) {
+    const img = dlg.querySelector<HTMLImageElement>('[data-img]')!;
+    const cap = dlg.querySelector<HTMLElement>('[data-caption]')!;
+    const cur = dlg.querySelector<HTMLElement>('[data-current]')!;
+    const tot = dlg.querySelector<HTMLElement>('[data-total]')!;
+    const prev = dlg.querySelector<HTMLButtonElement>('[data-prev]')!;
+    const next = dlg.querySelector<HTMLButtonElement>('[data-next]')!;
+    let items: Item[] = [];
+    let index = 0;
+    let onIndex: ((i: number) => void) | undefined;
+    let opener: HTMLElement | null = null;
+
+    const preload = (i: number) => {
+      if (items[i]) new Image().src = items[i].src;
+    };
+    const show = (i: number) => {
+      index = Math.max(0, Math.min(items.length - 1, i));
+      const it = items[index];
+      img.src = it.src;
+      img.width = it.w;
+      img.height = it.h;
+      img.alt = it.alt;
+      img.classList.toggle('phone', it.phone);
+      cap.textContent = it.alt;
+      cur.textContent = String(index + 1);
+      prev.disabled = index === 0;
+      next.disabled = index === items.length - 1;
+      preload(index + 1);
+      preload(index - 1);
+      onIndex?.(index);
+    };
+
+    document.addEventListener('lightbox:open', (e) => {
+      const d = (e as CustomEvent<Detail>).detail;
+      items = d.items;
+      onIndex = d.onIndex;
+      opener = d.opener;
+      tot.textContent = String(items.length);
+      dlg.classList.toggle('single', items.length < 2);
+      show(d.index);
+      document.documentElement.style.overflow = 'hidden';
+      dlg.showModal();
+    });
+    dlg.addEventListener('close', () => {
+      document.documentElement.style.overflow = '';
+      opener?.focus();
+    });
+    dlg.querySelector('[data-close]')!.addEventListener('click', () => dlg.close());
+    prev.addEventListener('click', () => show(index - 1));
+    next.addEventListener('click', () => show(index + 1));
+    dlg.addEventListener('keydown', (e) => {
+      if (e.key === 'ArrowRight') { e.preventDefault(); show(index + 1); }
+      if (e.key === 'ArrowLeft') { e.preventDefault(); show(index - 1); }
+    });
+    // Click on the dark area (not the picture or a button) closes.
+    dlg.addEventListener('click', (e) => {
+      if (Math.abs(e.clientX - x0) > 10 || Math.abs(e.clientY - y0) > 10) return; // that was a swipe
+      const el = e.target as HTMLElement;
+      if (el === dlg || el.classList.contains('frame') || el.tagName === 'FIGURE') dlg.close();
+    });
+    // Horizontal swipe pages; vertical movement is left to the browser.
+    let x0 = 0;
+    let y0 = 0;
+    dlg.addEventListener('pointerdown', (e) => { x0 = e.clientX; y0 = e.clientY; });
+    dlg.addEventListener('pointerup', (e) => {
+      const dx = e.clientX - x0;
+      const dy = e.clientY - y0;
+      if (Math.abs(dx) > 50 && Math.abs(dx) > Math.abs(dy) * 1.5) show(index + (dx < 0 ? 1 : -1));
+    });
+  }
+</script>
