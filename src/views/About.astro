@@ -1,0 +1,144 @@
+---
+import Base from '../layouts/Base.astro';
+import Fingerprint from '../components/Fingerprint.astro';
+import { LANGS, SITE, langPath, t, type Lang } from '../i18n';
+import { projects } from '../data/projects';
+
+interface Props {
+  lang: Lang;
+}
+const { lang } = Astro.props;
+const s = t(lang);
+const alternates = Object.fromEntries(LANGS.map((l) => [l, langPath(l, 'about')]));
+
+const bio: Record<Lang, string[]> = {
+  en: [
+    'I’m Erol. I write software, mostly Python and JavaScript, and I like tools that one person can understand end to end.',
+    'Most of what I build starts as a problem someone near me has: a budget that lives in five spreadsheets, a game server that needs moderating, a mailing list in an Excel file. This blog is where I write down what those projects taught me.',
+  ],
+  de: [
+    'Ich bin Erol. Ich schreibe Software, meistens in Python und JavaScript, und mag Werkzeuge, die eine einzelne Person komplett verstehen kann.',
+    'Das meiste, was ich baue, beginnt als Problem von jemandem in meiner Nähe: ein Budget in fünf Tabellen, ein Gameserver, der moderiert werden muss, eine Verteilerliste in einer Excel-Datei. Hier schreibe ich auf, was mich diese Projekte gelehrt haben.',
+  ],
+  tr: [
+    'Ben Erol. Çoğunlukla Python ve JavaScript ile yazılım yazıyorum; tek bir kişinin baştan sona anlayabileceği araçları seviyorum.',
+    'Yaptıklarımın çoğu yakınımdaki birinin derdiyle başlıyor: beş ayrı tabloya dağılmış bir bütçe, moderasyon isteyen bir oyun sunucusu, Excel dosyasında duran bir mail listesi. Bu blog, o projelerin bana öğrettiklerini yazdığım yer.',
+  ],
+};
+
+---
+
+<Base lang={lang} title={s.aboutTitle} nav="about" alternates={alternates}>
+  <section class="about wrap">
+    <div class="plot" aria-hidden="true">
+      <Fingerprint seed="erol" variant="post" />
+    </div>
+    <div class="copy">
+      <h1>{s.aboutTitle}</h1>
+      <div class="prose">
+        {bio[lang].map((p) => <p>{p}</p>)}
+      </div>
+    </div>
+  </section>
+
+  <section class="built wrap" aria-labelledby="built-h">
+    <h2 id="built-h" class="label">{s.built}</h2>
+    <ul class="list" role="list">
+      {projects.map((p) => (
+        <li>
+          <a class="item" href={`${langPath(lang, 'work')}#${p.id}`}>
+            <h3>{p.name}</h3>
+            <p class="stack label">{p.stack}</p>
+            <p class="what">{p.text[lang]}</p>
+          </a>
+        </li>
+      ))}
+    </ul>
+    <p class="label more">
+      <a href={langPath(lang, 'work')}>{s.seeAllWork} →</a> · <a href={SITE.github} rel="me">GitHub ↗</a>
+    </p>
+  </section>
+</Base>
+
+<style>
+  .about {
+    display: grid;
+    grid-template-columns: minmax(0, 4fr) minmax(0, 7fr);
+    gap: 48px;
+    align-items: start;
+    padding-block: clamp(40px, 6vw, 80px) 0;
+  }
+  .plot {
+    position: sticky;
+    top: 24px;
+  }
+  h1 {
+    margin: 0 0 28px;
+    font-family: var(--f-display);
+    font-weight: 800;
+    font-size: var(--step-3);
+    line-height: 1;
+    letter-spacing: -0.035em;
+  }
+  .copy .prose {
+    font-size: 1.3rem;
+  }
+  .built {
+    margin-top: clamp(56px, 8vw, 104px);
+  }
+  .built h2 {
+    margin: 0 0 8px;
+  }
+  .list {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(min(100%, 280px), 1fr));
+    border-top: 2px solid var(--ink);
+  }
+  .list li {
+    padding: 24px 24px 28px 0;
+    border-bottom: 1px solid var(--rule);
+  }
+  h3 {
+    margin: 0;
+    font-family: var(--f-display);
+    font-weight: 700;
+    font-size: var(--step-1);
+    letter-spacing: -0.02em;
+  }
+  .stack {
+    margin: 6px 0 12px;
+    color: var(--pen);
+  }
+  .what {
+    margin: 0;
+    line-height: 1.5;
+  }
+  .item {
+    display: block;
+    color: inherit;
+    text-decoration: none;
+  }
+  .item:hover h3 {
+    color: var(--pen);
+  }
+  .more {
+    margin-top: 20px;
+  }
+  .more a {
+    color: inherit;
+  }
+
+  @media (max-width: 800px) {
+    .about {
+      grid-template-columns: 1fr;
+      gap: 24px;
+    }
+    .plot {
+      position: static;
+      max-width: 340px;
+    }
+  }
+</style>

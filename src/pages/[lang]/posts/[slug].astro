@@ -1,0 +1,14 @@
+---
+import Post from '../../../views/Post.astro';
+import { postsIn } from '../../../lib/posts';
+
+export async function getStaticPaths() {
+  const out = [];
+  for (const lang of ['de', 'tr'] as const) {
+    for (const post of await postsIn(lang)) out.push({ params: { lang, slug: post.slug }, props: { post } });
+  }
+  return out;
+}
+const { post } = Astro.props;
+---
+<Post post={post} />

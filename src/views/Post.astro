@@ -1,0 +1,155 @@
+---
+import { render } from 'astro:content';
+import Base from '../layouts/Base.astro';
+import Fingerprint from '../components/Fingerprint.astro';
+import { fingerprint } from '../lib/fingerprint';
+import { editionsOf, readingMinutes, type Post } from '../lib/posts';
+import { LANGS, LANG_NAME, formatDate, isoDate, langPath, t } from '../i18n';
+
+interface Props {
+  post: Post;
+}
+const { post } = Astro.props;
+const { lang, slug } = post;
+const s = t(lang);
+const { Content } = await render(post);
+const editions = await editionsOf(slug);
+const others = LANGS.filter((l) => l !== lang && editions[l]);
+const hex = fingerprint(slug).hex;
+---
+
+<Base lang={lang} title={post.data.title} description={post.data.description} alternates={editions} type="article">
+  <article class="post wrap">
+    <header class="head">
+      <a class="back label" href={langPath(lang)}>← {s.backToWriting}</a>
+      <div class="plot">
+        <Fingerprint seed={slug} variant="post" />
+        <p class="hash label" title={`SHA-256("${slug}")`}>
+          sha256 <span>{hex.slice(0, 8)}…{hex.slice(-8)}</span>
+        </p>
+      </div>
+      <div class="titles">
+        <p class="meta label">
+          <time datetime={isoDate(post.data.date)}>{formatDate(post.data.date, lang)}</time>
+          <span aria-hidden="true">/</span>
+          {readingMinutes(post.body)} {s.minRead}
+          {post.data.tags.length > 0 && (
+            <>
+              <span aria-hidden="true">/</span>
+              {post.data.tags.join(' · ')}
+            </>
+          )}
+        </p>
+        <h1>{post.data.title}</h1>
+        <p class="dek">{post.data.description}</p>
+      </div>
+    </header>
+
+    <div class="body prose">
+      <Content />
+    </div>
+
+    {others.length > 0 && (
+      <footer class="editions label">
+        {s.alsoIn}:{' '}
+        {others.map((l, i) => (
+          <>
+            {i > 0 && ' · '}
+            <a href={editions[l]} hreflang={l} lang={l}>{LANG_NAME[l]}</a>
+          </>
+        ))}
+      </footer>
+    )}
+  </article>
+</Base>
+
+<style>
+  .head {
+    display: grid;
+    grid-template-columns: minmax(0, 5fr) minmax(0, 7fr);
+    gap: 0 48px;
+    padding-block: 32px 48px;
+    border-bottom: 2px solid var(--ink);
+  }
+  .back {
+    grid-column: 1 / -1;
+    justify-self: start;
+    display: inline-flex;
+    align-items: center;
+    min-height: 44px;
+    margin-bottom: 24px;
+    text-decoration: none;
+    color: var(--graphite);
+  }
+  .back:hover {
+    color: var(--pen);
+  }
+  .plot {
+    grid-column: 2;
+    grid-row: 2;
+  }
+  .hash {
+    margin: 10px 0 0;
+    text-align: right;
+    text-transform: none;
+  }
+  .hash span {
+    color: var(--ink);
+  }
+  .titles {
+    grid-column: 1;
+    grid-row: 2;
+    align-self: end;
+  }
+  .meta {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 4px 10px;
+    margin: 0 0 18px;
+  }
+  h1 {
+    margin: 0;
+    font-family: var(--f-display);
+    font-weight: 800;
+    font-size: clamp(2.2rem, 1.4rem + 3.2vw, 3.9rem);
+    line-height: 1;
+    letter-spacing: -0.035em;
+    text-wrap: balance;
+  }
+  .dek {
+    margin: 18px 0 0;
+    font-size: 1.3rem;
+    line-height: 1.45;
+    font-style: italic;
+    color: var(--graphite);
+    max-width: 40ch;
+  }
+  .body {
+    margin: 56px auto 0;
+  }
+  .editions {
+    max-width: var(--measure);
+    margin: 64px auto 0;
+    padding-top: 20px;
+    border-top: 1px solid var(--rule);
+  }
+
+  @media (max-width: 900px) {
+    .head {
+      grid-template-columns: 1fr;
+      padding-bottom: 32px;
+    }
+    .plot {
+      grid-column: 1;
+      grid-row: 2;
+      margin-bottom: 32px;
+    }
+    .titles {
+      grid-column: 1;
+      grid-row: 3;
+    }
+    .body {
+      margin-top: 36px;
+    }
+  }
+</style>

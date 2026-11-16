@@ -1,0 +1,226 @@
+---
+import '../styles/global.css';
+import { LANGS, LANG_LABEL, LANG_NAME, SITE, langPath, t, withBase, type Lang } from '../i18n';
+
+interface Props {
+  lang: Lang;
+  title?: string;
+  description?: string;
+  /** Where each language edition of this page lives. Missing ones fall back to that language's home. */
+  alternates?: Partial<Record<Lang, string>>;
+  nav?: 'writing' | 'work' | 'about';
+  type?: 'website' | 'article';
+}
+
+const { lang, title, description, alternates = {}, nav, type = 'website' } = Astro.props;
+const s = t(lang);
+const pageTitle = title ? `${title} — ${SITE.wordmark}` : s.siteTitle;
+const desc = description ?? s.siteDescription;
+const canonical = new URL(Astro.url.pathname, Astro.site);
+const altHref = (l: Lang) => alternates[l] ?? langPath(l);
+const rssHref = langPath(lang, 'rss.xml').replace(/\/$/, '');
+---
+
+<!doctype html>
+<html lang={lang}>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>{pageTitle}</title>
+    <meta name="description" content={desc} />
+    <link rel="canonical" href={canonical} />
+    {LANGS.filter((l) => alternates[l]).map((l) => (
+      <link rel="alternate" hreflang={l} href={new URL(alternates[l]!, Astro.site)} />
+    ))}
+    <link rel="icon" type="image/svg+xml" href={withBase('/favicon.svg')} />
+    <link rel="alternate" type="application/rss+xml" title={pageTitle} href={rssHref} />
+    <link rel="sitemap" href={withBase('/sitemap-index.xml')} />
+    <meta property="og:type" content={type} />
+    <meta property="og:title" content={pageTitle} />
+    <meta property="og:description" content={desc} />
+    <meta property="og:url" content={canonical} />
+    <meta name="theme-color" content="#e4e2ea" media="(prefers-color-scheme: light)" />
+    <meta name="theme-color" content="#13101e" media="(prefers-color-scheme: dark)" />
+    <script is:inline>
+      try {
+        const saved = localStorage.getItem('theme');
+        if (saved === 'light' || saved === 'dark') document.documentElement.dataset.theme = saved;
+      } catch {}
+    </script>
+  </head>
+  <body>
+    <a class="skip" href="#main">{s.skip}</a>
+    <header class="masthead wrap">
+      <a class="wordmark" href={langPath(lang)} aria-label={`${SITE.wordmark} — ${s.navWriting}`}>
+        ER<span class="oe">Ø</span>L
+      </a>
+      <nav class="primary" aria-label="Primary">
+        <a href={langPath(lang)} aria-current={nav === 'writing' ? 'page' : undefined}>{s.navWriting}</a>
+        <a href={langPath(lang, 'work')} aria-current={nav === 'work' ? 'page' : undefined}>{s.navWork}</a>
+        <a href={langPath(lang, 'about')} aria-current={nav === 'about' ? 'page' : undefined}>{s.navAbout}</a>
+      </nav>
+      <div class="tools">
+        <nav class="langs label" aria-label={s.langSwitch}>
+          {LANGS.map((l) => (
+            <a
+              href={altHref(l)}
+              hreflang={l}
+              lang={l}
+              title={LANG_NAME[l]}
+              aria-current={l === lang ? 'true' : undefined}
+            >
+              {LANG_LABEL[l]}
+            </a>
+          ))}
+        </nav>
+        <button class="theme" type="button" aria-label={s.themeToggle} title={s.themeToggle}>
+          <svg viewBox="0 0 24 24" width="20" height="20" aria-hidden="true">
+            <circle cx="12" cy="12" r="8.25" fill="none" stroke="currentColor" stroke-width="1.5"></circle>
+            <path d="M12 3.75a8.25 8.25 0 0 1 0 16.5Z" fill="currentColor"></path>
+          </svg>
+        </button>
+      </div>
+    </header>
+
+    <main id="main" tabindex="-1">
+      <slot />
+    </main>
+
+    <footer class="colophon wrap">
+      <p class="label">
+        © {new Date().getFullYear()} {SITE.author} · <a href={rssHref}>{s.rss}</a> ·{' '}
+        <a href={SITE.github} rel="me">GitHub</a>
+      </p>
+      <p class="label" lang="en">Funnel Display · Newsreader · Martian Mono</p>
+    </footer>
+
+    <script>
+      const btn = document.querySelector<HTMLButtonElement>('.theme');
+      btn?.addEventListener('click', () => {
+        const root = document.documentElement;
+        const current =
+          root.dataset.theme ?? (matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light');
+        const next = current === 'dark' ? 'light' : 'dark';
+        root.dataset.theme = next;
+        try {
+          localStorage.setItem('theme', next);
+        } catch {}
+      });
+    </script>
+  </body>
+</html>
+
+<style>
+  .masthead {
+    display: grid;
+    grid-template-columns: auto 1fr auto;
+    align-items: center;
+    gap: 12px 32px;
+    padding-block: 22px;
+    background: linear-gradient(var(--rule), var(--rule)) center bottom / calc(100% - 2 * var(--gutter)) 1px no-repeat;
+  }
+  .wordmark {
+    font-family: var(--f-display);
+    font-weight: 800;
+    font-size: 1.55rem;
+    letter-spacing: -0.04em;
+    line-height: 1;
+    color: var(--ink);
+    text-decoration: none;
+  }
+  .oe {
+    color: var(--pen);
+  }
+  .primary {
+    display: flex;
+    gap: 4px;
+  }
+  .primary a,
+  .langs a {
+    display: inline-flex;
+    align-items: center;
+    min-height: 44px;
+    padding-inline: 10px;
+    color: var(--ink);
+    text-decoration: none;
+  }
+  .primary a {
+    font-family: var(--f-display);
+    font-weight: 500;
+    font-size: 1.02rem;
+  }
+  .primary a[aria-current='page'] {
+    text-decoration: underline;
+    text-decoration-color: var(--pen);
+    text-decoration-thickness: 2px;
+    text-underline-offset: 0.4em;
+  }
+  .primary a:hover {
+    color: var(--pen);
+  }
+  .tools {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+  }
+  .langs {
+    display: flex;
+  }
+  .langs a {
+    padding-inline: 7px;
+    color: var(--graphite);
+  }
+  .langs a[aria-current='true'] {
+    color: var(--ink);
+    font-weight: 700;
+  }
+  .langs a:hover {
+    color: var(--pen);
+  }
+  .theme {
+    display: grid;
+    place-items: center;
+    width: 44px;
+    height: 44px;
+    border: 0;
+    border-radius: 50%;
+    background: transparent;
+    color: var(--ink);
+    cursor: pointer;
+    transition: transform 0.3s var(--ease);
+  }
+  .theme:hover {
+    transform: rotate(180deg);
+    color: var(--pen);
+  }
+  main:focus {
+    outline: none;
+  }
+  .colophon {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    gap: 8px 24px;
+    margin-top: 96px;
+    padding-block: 28px 40px;
+    background: linear-gradient(var(--rule), var(--rule)) center top / calc(100% - 2 * var(--gutter)) 1px no-repeat;
+  }
+  .colophon p {
+    margin: 0;
+  }
+  .colophon a {
+    color: inherit;
+  }
+
+  @media (max-width: 640px) {
+    .masthead {
+      grid-template-columns: 1fr auto;
+      padding-block: 14px 6px;
+    }
+    .primary {
+      grid-column: 1 / -1;
+      grid-row: 2;
+      margin-left: -10px;
+    }
+  }
+</style>

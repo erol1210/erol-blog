@@ -1,0 +1,127 @@
+---
+import { fingerprint, W, H } from '../lib/fingerprint';
+
+interface Props {
+  seed: string;
+  variant?: 'hero' | 'post' | 'thumb';
+  label?: string;
+}
+
+const { seed, variant = 'post', label } = Astro.props;
+const fp = fingerprint(seed);
+const C = 10; // board cell size in SVG units
+const at = (n: number) => n * C + C / 2;
+
+// Drop repeated points (a bishop pinned in a corner stays put).
+const points = fp.path.filter((p, i, all) => i === 0 || p[0] !== all[i - 1][0] || p[1] !== all[i - 1][1]);
+const d = points.map(([x, y], i) => `${i ? 'L' : 'M'}${at(x)} ${at(y)}`).join('');
+
+const stops = fp.visits
+  .map((count, i) => ({ count, x: i % W, y: Math.floor(i / W) }))
+  .filter((s) => s.count >= 2);
+const grid = variant === 'thumb' ? [] : Array.from({ length: W * H }, (_, i) => [i % W, Math.floor(i / W)]);
+const aria = label ?? `Visual fingerprint of “${seed}”`;
+---
+
+<svg
+  class:list={['fp', `fp--${variant}`]}
+  viewBox={`0 0 ${W * C} ${H * C}`}
+  role="img"
+  aria-label={aria}
+  data-seed={seed}
+>
+  <title>{aria}</title>
+  <g class="fp-grid" aria-hidden="true">
+    {grid.map(([x, y]) => <circle cx={at(x)} cy={at(y)} r="0.55" />)}
+  </g>
+  <path class="fp-line" d={d} pathLength="1" />
+  <g class="fp-stops" aria-hidden="true">
+    {stops.map((s) => (
+      <circle cx={at(s.x)} cy={at(s.y)} r={Math.min(4.2, 0.6 + s.count * 0.55)} style={`--i:${s.x + s.y}`} />
+    ))}
+  </g>
+  <rect class="fp-start" x={at(fp.start[0]) - 2.6} y={at(fp.start[1]) - 2.6} width="5.2" height="5.2" />
+  <circle class="fp-end" cx={at(fp.end[0])} cy={at(fp.end[1])} r="2.8" />
+</svg>
+
+<style>
+  .fp {
+    display: block;
+    width: 100%;
+    height: auto;
+    overflow: visible;
+  }
+  .fp-grid circle {
+    fill: var(--rule);
+  }
+  .fp-line {
+    fill: none;
+    stroke: var(--pen);
+    stroke-width: 1.5px;
+    stroke-linejoin: round;
+    stroke-linecap: round;
+    vector-effect: non-scaling-stroke;
+    stroke-dasharray: 1;
+    stroke-dashoffset: 0;
+  }
+  .fp-stops circle {
+    fill: var(--ink);
+  }
+  .fp-start {
+    fill: var(--paper);
+    stroke: var(--ink);
+    stroke-width: 1.25px;
+    vector-effect: non-scaling-stroke;
+  }
+  .fp-end {
+    fill: var(--pen);
+  }
+  .fp--thumb .fp-line {
+    stroke-width: 1.25px;
+  }
+  .fp--hero .fp-line {
+    stroke-width: 1.75px;
+  }
+
+  @media (prefers-reduced-motion: no-preference) {
+    .fp--hero .fp-line,
+    .fp--post .fp-line {
+      animation: fp-draw 2.6s cubic-bezier(0.55, 0.1, 0.25, 1) both;
+    }
+    .fp--hero .fp-stops circle,
+    .fp--post .fp-stops circle,
+    .fp--hero .fp-end,
+    .fp--post .fp-end {
+      animation: fp-pop 0.5s ease-out both;
+      animation-delay: calc(1.2s + var(--i, 18) * 45ms);
+    }
+    :global(.post-row:hover) .fp--thumb .fp-line,
+    :global(.post-row:focus-visible) .fp--thumb .fp-line {
+      animation: fp-draw 0.9s cubic-bezier(0.55, 0.1, 0.25, 1) both;
+    }
+  }
+
+  @keyframes fp-draw {
+    from {
+      stroke-dashoffset: 1;
+    }
+    to {
+      stroke-dashoffset: 0;
+    }
+  }
+  @keyframes fp-pop {
+    from {
+      opacity: 0;
+      transform: scale(0.2);
+    }
+    to {
+      opacity: 1;
+      transform: scale(1);
+    }
+  }
+  .fp-stops circle,
+  .fp-end {
+    transform-box: fill-box;
+    transform-origin: center;
+  }
+</style>

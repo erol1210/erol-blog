@@ -1,0 +1,18 @@
+---
+import Base from '../layouts/Base.astro';
+import Fingerprint from '../components/Fingerprint.astro';
+import { langPath, t } from '../i18n';
+const s = t('en');
+---
+<Base lang="en" title="404">
+  <section class="wrap nf">
+    <div class="plot" aria-hidden="true"><Fingerprint seed="404" variant="post" /></div>
+    <h1>{s.notFound}</h1>
+    <p><a href={langPath('en')}>{s.notFoundLink} →</a></p>
+  </section>
+</Base>
+<style>
+  .nf { padding-block: 64px; max-width: 720px; }
+  .plot { max-width: 420px; margin-bottom: 32px; }
+  h1 { font-family: var(--f-display); font-weight: 800; font-size: var(--step-3); line-height: 1; letter-spacing: -0.035em; margin: 0 0 16px; }
+</style>

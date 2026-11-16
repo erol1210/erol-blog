@@ -1,0 +1,95 @@
+---
+import { Image } from 'astro:assets';
+import type { Shot } from '../data/projects';
+import type { Lang } from '../i18n';
+
+interface Props {
+  shot: Shot;
+  lang: Lang;
+  eager?: boolean;
+}
+const { shot, lang, eager = false } = Astro.props;
+const phone = shot.frame === 'phone';
+---
+
+<div class:list={['shot', `shot--${shot.frame}`]}>
+  {(shot.frame === 'browser' || shot.frame === 'window') && (
+    <div class="bar" aria-hidden="true">
+      <span class="dots"><i></i><i></i><i></i></span>
+      {shot.chrome && <span class:list={['addr', { term: shot.frame === 'window' }]}>{shot.chrome}</span>}
+    </div>
+  )}
+  <Image
+    src={shot.src}
+    alt={shot.alt[lang]}
+    widths={phone ? [280, 420] : [640, 960, 1440]}
+    sizes={phone ? '(max-width: 700px) 46vw, 280px' : '(max-width: 900px) 100vw, 860px'}
+    format="webp"
+    quality={82}
+    loading={eager ? 'eager' : 'lazy'}
+  />
+</div>
+
+<style>
+  .shot {
+    background: var(--paper-2);
+    border: 1px solid var(--rule);
+    border-radius: 10px;
+    overflow: hidden;
+    box-shadow: 0 1px 0 var(--rule), 0 24px 48px -28px rgb(26 21 48 / 0.45);
+  }
+  .shot img {
+    display: block;
+    width: 100%;
+    height: auto;
+  }
+  .bar {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    height: 34px;
+    padding-inline: 12px;
+    border-bottom: 1px solid var(--rule);
+  }
+  .dots {
+    display: flex;
+    gap: 6px;
+  }
+  .dots i {
+    width: 9px;
+    height: 9px;
+    border-radius: 50%;
+    border: 1.25px solid var(--graphite);
+  }
+  .dots i:first-child {
+    background: var(--pen);
+    border-color: var(--pen);
+  }
+  .addr {
+    flex: 1;
+    max-width: 380px;
+    margin-inline: auto;
+    padding: 3px 12px;
+    border-radius: 999px;
+    background: var(--paper);
+    font-family: var(--f-mono);
+    font-size: 0.68rem;
+    color: var(--graphite);
+    text-align: center;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+  .addr.term {
+    background: none;
+  }
+  .shot--phone {
+    border-radius: 34px;
+    padding: 10px;
+    background: var(--ink);
+    border: 0;
+  }
+  .shot--phone img {
+    border-radius: 25px;
+  }
+</style>
